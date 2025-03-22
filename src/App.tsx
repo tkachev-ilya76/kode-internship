@@ -13,6 +13,7 @@ function App() {
   const GlobalStyle = createGlobalStyle`
     html, body {
     width: 100%;
+    align-items: flex-start;
     margin: 0;
     padding: 0;
     overflow-x: hidden; /* Убираем горизонтальный скролл */
@@ -21,7 +22,9 @@ function App() {
   {
     margin: 0;
     padding: 0;
-    min-width: 100%
+    min-width: 100%;
+    
+    
   }
 `;
 

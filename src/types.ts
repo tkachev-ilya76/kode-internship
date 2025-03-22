@@ -4,5 +4,5 @@ export interface User {
     lastName: string;
     avatarUrl: string;
     department: string;
-    position: string;
+    userTag: string;
 }
