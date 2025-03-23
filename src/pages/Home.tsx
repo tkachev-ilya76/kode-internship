@@ -230,7 +230,7 @@ function Home () {
         const birthDate = new Date(user.birthday);
         let nextBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
       
-        // Если день рождения уже прошел в этом году, переносим на следующий
+        
         if (nextBirthday < today) {
           nextBirthday.setFullYear(today.getFullYear() + 1);
         }
@@ -440,7 +440,7 @@ function Home () {
 
     return (
     
-    //api.lorem.space из ссылки на аватар заменен на robohash, т.к. api.lorem.space не отвечает на запросы. 
+    //api.lorem.space из ссылки на аватар заменен на гуся, т.к. api.lorem.space не отвечает на запросы. 
     
         <Container>  
             {isOnline && !reloading && 

@@ -1,54 +1,64 @@
-# React + TypeScript + Vite
+# kode-internship
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Декомпозиция задания
 
-Currently, two official plugins are available:
+1. Инициализация проекта
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+2. Настройка роутинга
 
-## Expanding the ESLint configuration
+   Подключить react-router-dom.
+   Создать базовые роуты (/ — главная, /user/:id — детали).
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+3. Запрос данных с API
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+   Написать функцию для запроса пользователей (axios.get).
+   Вывести данные в консоль.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+4. Отображение списка пользователей
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+   Отрисовать пользователей на главной странице.
+   Показать имя, аватар, отдел.
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+5. Реализация загрузки и ошибок
+
+   Показывать индикатор загрузки.
+   Обрабатывать ошибки и показывать сообщение.
+
+6. Фильтрация пользователей по департаменту и поиск
+
+   Сделать вкладки с департаментами.  
+   Фильтровать пользователей по department.
+   Добавить input для поиска.
+   Фильтровать список при вводе текста.
+
+7. Сортировка списка
+
+   Реализовать сортировку:
+   По алфавиту (по умолчанию).
+   По дню рождения (от ближайшего).
+
+8. Детальная страница пользователя
+
+   При клике на пользователя открывать /user/:id
+   Отображать аватар, имя, департамент, телефон.
+
+   Кнопка «Назад» для возврата на главную.
+
+9. Кэширование запросов (5 минут)
+
+   Кэшировать запрос пользователей (локальное хранилище).
+
+10. Реализация отслеживания сети
+  
+  Отображать сообщение при отсутствии сети.
+  Показывать сохранённые данные в оффлайн-режиме.
+
+11. Деплой на GitHub Pages
+
+  Настроить gh-pages для публикации.
+  Добавить ссылку на проект в README.md.
+
+12. Финальные правки и тестирование
+    
+  Оптимизация кода, рефакторинг.
+  Финальная проверка функционала
