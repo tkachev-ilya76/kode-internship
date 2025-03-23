@@ -7,10 +7,12 @@ import sortIcon from '../assets/sort.svg';
 import radioOff from '../assets/radio_button_unchecked.svg';
 import radioOn from '../assets/radio_button_checked.svg';
 import close from '../assets/cancel.svg';
+import goose from '../assets/goose.svg';
 
 import { useNavigate } from "react-router-dom";
 import { getCachedUsers } from "../services/api";
 import { setCachedUsers } from "../services/api";
+
 
 const Container = styled.div`
   width: auto;
@@ -19,7 +21,8 @@ const Container = styled.div`
   text-align: left;
   font-family: 'Arial Black', sans-serif;
   color: black;
-  
+  overflow-x: hidden;
+  overscroll-behavior-x: contain;
 `;
 const FilterContainer = styled.div`
   width: 100%;
@@ -27,7 +30,7 @@ const FilterContainer = styled.div`
   display: flex;
   flex-flow: row;
   border-bottom: 1px solid rgba(148, 148, 148, 0.55);
-  
+  overflow-x: auto;
 `;
 const FilterButton = styled.button<{ active: boolean }>`
     margin: 0 0px;
@@ -62,20 +65,17 @@ const SearchContainer = styled.div`
     flex-flow: row;
     align-items: center;
     padding: 10px;
-    &.offline {
-        background-color: #ff4141;
-        border-radius:0;
-    }
+    
 `;
 const OfflineContainer = styled.div`
-    transform: translate(-20px,0);
+    transform: translate(0px,0);
     background-color: #ff4141;
     margin: 0;
     padding: 20px;
     width: 100vw;
 `;
 const ReloadingContainer = styled.div`
-    transform: translate(-20px,0);
+    transform: translate(0px,0);
     background-color: #6534FF;
     margin: 0;
     padding: 20px;
@@ -139,8 +139,9 @@ const HeaderOffline = styled.h1`
   font-weight: 500;
   color:white;
   margin-bottom: 15px;
+  margin-right:20px;
   font-size: 2em;
-  
+  font-family: 'Arial Black', sans-serif;
 `;
 const YearHeader = styled.h2`
   margin-top: 20px;
@@ -177,6 +178,14 @@ const Avatar = styled.img`
   width: 100px;
   height: 100px;
   border-radius: 50%;
+`;
+const EmptyAvatar = styled.div`
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  color: gray;
+  background-color: gray;
+  margin-right: 20px;
 `;
 
 const UserInfo = styled.div`
@@ -286,8 +295,106 @@ function Home () {
         };
     }, [reloading]);
     
-    if (loading) return (<h1>Загрузка...</h1>);
-    if (error) return (<ErrorMessage>Ошибка загрузки</ErrorMessage>);
+    if (loading) return (
+        <Container>  
+           
+        <div>
+            <Header className={isOnline?'':'offline'}>Поиск</Header>
+            <SearchContainer className={isOnline?'':'offline'}>
+                <SearchIcon src={searchIcon} alt=""/>
+                <SearchInput
+                type="text"
+                placeholder="Поиск по имени, фамилии или никнейму"
+                value={searchQuery}
+                
+                />
+                <SortIcon   src={sortIcon} 
+                            alt=""
+                            onClick={()=>{setPopUp(true); console.log('click')}}
+                        />
+            </SearchContainer>
+        </div>                       
+        
+        <FilterContainer>
+            {Object.entries(departmentMap).map(([key, name]) => (
+            <FilterButton
+                key={key}
+                active={department === key}
+                onClick={() => setDepartment(key)}
+            >
+                {name}
+            </FilterButton>
+            ))}
+        </FilterContainer>
+        <div style={{display: 'flex', flexFlow: 'row', marginTop: 20}}>
+                    <EmptyAvatar/>
+                    <div>
+                        <div style={{borderRadius: '15px', backgroundColor: 'gray', width: 200, height: 30, marginBottom: 5}}></div>
+                        <div style={{borderRadius: '15px', backgroundColor: 'gray', width: 100, height: 30}}></div>
+                    </div>
+                    
+        </div>
+        <div style={{display: 'flex', flexFlow: 'row', marginTop: 20}}>
+                    <EmptyAvatar/>
+                    <div>
+                        <div style={{borderRadius: '15px', backgroundColor: 'gray', width: 200, height: 30, marginBottom: 5}}></div>
+                        <div style={{borderRadius: '15px', backgroundColor: 'gray', width: 100, height: 30}}></div>
+                    </div>
+                    
+        </div>
+        <div style={{display: 'flex', flexFlow: 'row', marginTop: 20}}>
+                    <EmptyAvatar/>
+                    <div>
+                        <div style={{borderRadius: '15px', backgroundColor: 'gray', width: 200, height: 30, marginBottom: 5}}></div>
+                        <div style={{borderRadius: '15px', backgroundColor: 'gray', width: 100, height: 30}}></div>
+                    </div>
+                    
+        </div>
+    </Container>
+);
+    if (error) return (
+        
+        <Container>  
+           
+            <div>
+                <Header className={isOnline?'':'offline'}>Поиск</Header>
+                <SearchContainer className={isOnline?'':'offline'}>
+                    <SearchIcon src={searchIcon} alt=""/>
+                    <SearchInput
+                    type="text"
+                    placeholder="Поиск по имени, фамилии или никнейму"
+                    value={searchQuery}
+                    
+                    />
+                    <SortIcon   src={sortIcon} 
+                                alt=""
+                                onClick={()=>{setPopUp(true); console.log('click')}}
+                            />
+                </SearchContainer>
+            </div>                       
+            
+            <FilterContainer>
+                {Object.entries(departmentMap).map(([key, name]) => (
+                <FilterButton
+                    key={key}
+                    active={department === key}
+                    onClick={() => setDepartment(key)}
+                >
+                    {name}
+                </FilterButton>
+                ))}
+            </FilterContainer>
+            <div>
+                <h1 style={{textAlign: 'center', marginTop: '10%', fontSize: '5em'}}>🛸</h1>
+                <h2 style={{textAlign: 'center'}}>Какой-то сверхразум все поломал</h2>
+                <p style={{textAlign: 'center', color: 'gray'}}>Постараемся быстро починить</p>
+            </div>
+            
+            
+        </Container>
+    
+
+);
 
     const filteredByDepartment = (department === "all"
     ? users
@@ -379,15 +486,16 @@ function Home () {
             </FilterContainer>
             
             <UserList>
+                
                 {
-                sortType == 'birthday' ? (
+                (sortType == 'birthday' && groupedUsers.size > 0) ? (
                     [...groupedUsers.entries()].map(([year, users]) => (
                         <div key={year}>
                           <YearHeader>{year}</YearHeader>
                           {users.map((user : any) => (
                             
                             <UserItem key={user.id} onClick={() => navigate(`/user/${user.id}`)}>
-                                <Avatar src={`https://robohash.org/${user.firstName}`} alt={user.firstName} width={50} />
+                                <Avatar src={goose} alt={user.firstName} width={50} />
                                 <UserInfo>
                                     <p>{user.firstName} {user.lastName}</p>
                                     <p style={{color: 'gray'}}>{user.position}</p>
@@ -398,18 +506,26 @@ function Home () {
                             
                         ))}
                         </div>
-                    ))) : 
+                    ))) : (sortedUsers.length > 0) ?
                 (
                 sortedUsers.map((user) => (
                 <UserItem key={user.id} onClick={() => navigate(`/user/${user.id}`)}>
-                    <Avatar src={`https://robohash.org/${user.firstName}`} alt={user.firstName} width={50} />
+                    <Avatar src={goose} alt={user.firstName} width={50} />
                     <UserInfo>
                         <p>{user.firstName} {user.lastName}</p>
                         <p style={{color: 'gray'}}>{user.position}</p>
                     </UserInfo>
                     
                 </UserItem>
-                )))}
+                ))) : (
+                        <div>
+                            <h1 style={{textAlign: 'center', marginTop: '10%', fontSize: '5em'}}>🔍</h1>
+                            <h2 style={{textAlign: 'center'}}>Мы никого не нашли</h2>
+                            <p style={{textAlign: 'center', color: 'gray'}}>Попробуй скорректировать запрос</p>
+                        </div>
+                            
+                )}
+
             </UserList>
             {popUp && (
                     <>
@@ -417,7 +533,7 @@ function Home () {
                         <PopupWrapper>
                         <div style={{display: 'flex', flexFlow: 'row', flexGrow: 10, width: '100%', justifyContent: 'space-beetween'}}>                            
                             <h3 style = {{marginLeft: 'auto',marginRight: 'auto' ,justifySelf:"center"}}>Cортировка</h3>
-                            <img src={close} style={{justifySelf: 'end', cursor: 'pointer'}} onClick={()=>{setPopUp(false)}}/>   
+                            <img src={close} style={{marginLeft: '20px', justifySelf: 'end', cursor: 'pointer'}} onClick={()=>{setPopUp(false)}}/>   
                         </div>
                            
                         <SortOptionContainer onClick={()=>setSortType('alphabet')}>                            

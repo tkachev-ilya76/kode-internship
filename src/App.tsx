@@ -16,14 +16,16 @@ function App() {
     align-items: flex-start;
     margin: 0;
     padding: 0;
-    overflow-x: hidden; /* Убираем горизонтальный скролл */
+    overflow-x: hidden;
+    overscroll-behavior-x: contain; 
   },
   #root
   {
     margin: 0;
     padding: 0;
     min-width: 100%;
-    
+    overflow-x: hidden;
+    overscroll-behavior-x: contain;
     
   }
 `;

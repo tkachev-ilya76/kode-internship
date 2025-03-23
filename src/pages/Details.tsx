@@ -9,6 +9,7 @@ import star from '../assets/star.svg';
 import call from '../assets/call.svg';
 import dep from '../assets/case.svg';
 import { getCachedUsers } from "../services/api";
+import goose from '../assets/goose.svg';
 
 function Details(){
     const {id} = useParams();      
@@ -49,12 +50,13 @@ const BackButton = styled.img`
   border: none;
   
   color: white;
-  border-radius: 5px;
+  border-radius: 50%;
   cursor: pointer;
-  
+  transition: background-color 0.3s;
   &:hover {
-    background: #0056b3;
+    background:#a5a5a5;
   }
+
 `;
 
 const Avatar = styled.img`
@@ -113,14 +115,49 @@ const PhoneLink = styled.a`
     
   }, [id]);
 
-  if (loading) return <p>Загрузка...</p>;
-  if (error || !user) return <p>Пользователь не найден</p>;
+  if (loading) return (
+    <div>
+        <TitleContainer>
+            <BackButton src={back} onClick={() => navigate(-1)}/>
+            <Avatar src={goose} alt={''} />
+            <h2 style={{margin: '10px'}}>Загрузка...</h2>
+            <h3 style={{margin: '10px', color:'#414141'}}>должность</h3>
+        </TitleContainer>
+      <DescriptionContainer>
+        <div style={{marginLeft: '20px'}}>
+            <div style ={{display: 'flex', flexFlow: 'row'}}>
+                <img src={dep} alt=""/>
+                <p style={{textAlign:'left', marginLeft: '10px'}}>Отдел</p>
+            </div>
+            <div style={{display: 'flex', flexFlow: 'row'}}>
+                <img src={star} alt=""/>
+                <p style={{textAlign: 'left', marginLeft: '10px'}}>Дата рождения</p>
+            </div>
+            <div style={{display: 'flex', flexFlow: 'row'}}>
+                <img src={call} alt=""/>                
+            </div>
+        </div>
+        
+        
+      </DescriptionContainer>
+      
+    </div>
+  );
+  if (error || !user) return (
+  <div>
+        <TitleContainer>
+            <BackButton src={back} onClick={() => navigate('/')}/>            
+        </TitleContainer>
+            <h1 style={{textAlign: 'center', marginTop: '10%', fontSize: '5em'}}>🛸</h1>
+            <h2 style={{textAlign: 'center'}}>Какой-то сверхразум все поломал</h2>
+            <p style={{textAlign: 'center', color: 'gray'}}>Постараемся быстро починить</p>
+    </div>)
 
   return (
     <div>
         <TitleContainer>
             <BackButton src={back} onClick={() => navigate(-1)}/>
-            <Avatar src={`https://robohash.org/${user.firstName}`} alt={''} />
+            <Avatar src={goose} alt={''} />
             <h2 style={{margin: '10px'}}>{user.firstName} {user.lastName}</h2>
             <h3 style={{margin: '10px', color:'#414141'}}>{user.position}</h3>
         </TitleContainer>
