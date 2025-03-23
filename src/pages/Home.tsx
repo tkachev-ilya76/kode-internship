@@ -62,6 +62,24 @@ const SearchContainer = styled.div`
     flex-flow: row;
     align-items: center;
     padding: 10px;
+    &.offline {
+        background-color: #ff4141;
+        border-radius:0;
+    }
+`;
+const OfflineContainer = styled.div`
+    transform: translate(-20px,0);
+    background-color: #ff4141;
+    margin: 0;
+    padding: 20px;
+    width: 100vw;
+`;
+const ReloadingContainer = styled.div`
+    transform: translate(-20px,0);
+    background-color: #6534FF;
+    margin: 0;
+    padding: 20px;
+    width: 100vw;
 `;
 const SearchInput = styled.input`
         
@@ -115,6 +133,14 @@ const Header = styled.h1`
   
   margin-bottom: 15px;
   font-size: 2em;
+  
+`;
+const HeaderOffline = styled.h1`
+  font-weight: 500;
+  color:white;
+  margin-bottom: 15px;
+  font-size: 2em;
+  
 `;
 const YearHeader = styled.h2`
   margin-top: 20px;
@@ -181,11 +207,13 @@ const departmentMap: Record<string, string> = {
 function Home () {
     const [users, setUsers] = useState<UserWithNextBirthday[]>([]);
     const [loading, setLoading] = useState(true);
+    const [reloading, setReloading] = useState(false);
     const [error, setError] = useState(false);
     const [department, setDepartment] = useState("all");
     const [searchQuery, setSearchQuery] = useState("");
     const [popUp, setPopUp] = useState(false);
     const [sortType, setSortType] = useState('alphabet');
+    const [isOnline, setIsOnline] = useState(navigator.onLine);
     const navigate = useNavigate();
 
     const calculateNextBirthday = (user: User): UserWithNextBirthday => {
@@ -203,38 +231,60 @@ function Home () {
 
 
     useEffect(() => {
-        const loadUsers = async () => {
-        const cachedUsers = getCachedUsers();
-        console.log("Данные в localStorage:", localStorage.getItem("users_cache"));
+        
 
-        if (cachedUsers) {
-              
-            const usersWithNextBirthDay = cachedUsers.map(calculateNextBirthday);
-            setUsers(usersWithNextBirthDay);
-            setLoading(false);
-            console.log('cached');
-            return;
-        }          
-          
-        try {
-            const users = await fetchUsers();
-            setCachedUsers(users.items);
-            const usersWithNextBirthDay = users.items.map(calculateNextBirthday);
-            setUsers(usersWithNextBirthDay);
+        const loadUsers = async () => {
+            if (!reloading)
+            {
+                const cachedUsers = getCachedUsers();                
+
+                if (cachedUsers) {
+                    
+                    const usersWithNextBirthDay = cachedUsers.map(calculateNextBirthday);
+                    setUsers(usersWithNextBirthDay);
+                    setLoading(false);
+                    console.log(reloading);
+                    console.log('cached');
+                    return;
+                }       
+            }
+                
             
-            console.log("Список пользователей:", users);
-            
-          } catch (error) {
-            console.error("Ошибка загрузки данных");
-            setError(true);
-          }
-          finally{
-            setLoading(false);
-          }
+            try {
+                const users = await fetchUsers();
+                console.log('запрос...');
+                setCachedUsers(users.items);
+                const usersWithNextBirthDay = users.items.map(calculateNextBirthday);
+                setUsers(usersWithNextBirthDay);
+                
+                console.log("Список пользователей:", users);
+                
+            } catch (error) {
+                console.error("Ошибка загрузки данных");
+                setError(true);
+            }
+            finally{
+                setLoading(false);
+                setReloading(false);
+            }
         };
-    
+        const handleOnline = () => {console.log('online');setIsOnline(true); loadUsers(); setReloading(true);};
+        const handleOffline = () => {console.log('offline');setIsOnline(false)};
+
+        window.addEventListener("online", handleOnline);
+        window.addEventListener("offline", handleOffline);
+        
+        const checkConnection = () => setIsOnline(navigator.onLine);
+
+        const interval = setInterval(checkConnection, 3000);
+
         loadUsers();
-    }, []);
+        return () => {
+            window.removeEventListener("online", handleOnline);
+            window.removeEventListener("offline", handleOffline);
+            clearInterval(interval);
+        };
+    }, [reloading]);
     
     if (loading) return (<h1>Загрузка...</h1>);
     if (error) return (<ErrorMessage>Ошибка загрузки</ErrorMessage>);
@@ -286,23 +336,36 @@ function Home () {
     //api.lorem.space из ссылки на аватар заменен на robohash, т.к. api.lorem.space не отвечает на запросы. 
     
         <Container>  
-                
-            <Header>Поиск</Header>
-            <SearchContainer>
-                <SearchIcon src={searchIcon} alt=""/>
-                <SearchInput
-                type="text"
-                placeholder="Поиск по имени, фамилии или никнейму"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                />
-                <SortIcon   src={sortIcon} 
-                            alt=""
-                            onClick={()=>{setPopUp(true); console.log('click')}}
+            {isOnline && !reloading && 
+            <div>
+                <Header className={isOnline?'':'offline'}>Поиск</Header>
+                <SearchContainer className={isOnline?'':'offline'}>
+                    <SearchIcon src={searchIcon} alt=""/>
+                    <SearchInput
+                    type="text"
+                    placeholder="Поиск по имени, фамилии или никнейму"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                    <SortIcon   src={sortIcon} 
+                                alt=""
+                                onClick={()=>{setPopUp(true); console.log('click')}}
                             />
-            </SearchContainer>
-            
-            
+                </SearchContainer>
+            </div>
+            }
+            {!isOnline &&
+            <OfflineContainer>
+                <HeaderOffline className={isOnline?'':'offline'}>Поиск</HeaderOffline>
+                <p style={{color:'white'}}>Не могу обновить данные. Проверь соединение с интернетом</p>
+            </OfflineContainer>
+            }
+            {reloading &&
+            <ReloadingContainer>
+                <HeaderOffline className={isOnline?'':'offline'}>Поиск</HeaderOffline>
+                <p style={{color:'white'}}>Секундочку, гружусь...</p>
+            </ReloadingContainer>
+            }
             <FilterContainer>
                 {Object.entries(departmentMap).map(([key, name]) => (
                 <FilterButton
@@ -314,6 +377,7 @@ function Home () {
                 </FilterButton>
                 ))}
             </FilterContainer>
+            
             <UserList>
                 {
                 sortType == 'birthday' ? (
