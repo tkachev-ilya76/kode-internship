@@ -72,6 +72,7 @@ Please change the parent <Route path="${L}"> to <Route path="${L==="/"?"*":`${L}
   color: black;
   overflow-x: hidden;
   overscroll-behavior-x: contain;
+  background-color: white;
 `,tf=zt.div`
   width: 100%;
   
