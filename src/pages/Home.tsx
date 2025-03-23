@@ -7,6 +7,8 @@ import sortIcon from '../assets/sort.svg';
 import radioOff from '../assets/radio_button_unchecked.svg';
 import radioOn from '../assets/radio_button_checked.svg';
 import close from '../assets/cancel.svg';
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 const Container = styled.div`
@@ -136,7 +138,11 @@ const UserItem = styled.li`
     align-items: center;
     gap: 10px;
     padding: 10px;
-    
+    border-radius: 20px;
+    &:hover{
+        background-color: #e2daf8;
+    }
+    transition: background-color 0.3s;
   
 `;
 
@@ -179,6 +185,7 @@ function Home () {
     const [searchQuery, setSearchQuery] = useState("");
     const [popUp, setPopUp] = useState(false);
     const [sortType, setSortType] = useState('alphabet');
+    const navigate = useNavigate();
 
     const calculateNextBirthday = (user: User): UserWithNextBirthday => {
         const today = new Date();
@@ -299,7 +306,8 @@ function Home () {
                         <div key={year}>
                           <YearHeader>{year}</YearHeader>
                           {users.map((user : any) => (
-                            <UserItem key={user.id}>
+                            
+                            <UserItem key={user.id} onClick={() => navigate(`/user/${user.id}`)}>
                                 <Avatar src={`https://robohash.org/${user.firstName}`} alt={user.firstName} width={50} />
                                 <UserInfo>
                                     <p>{user.firstName} {user.lastName}</p>
@@ -308,12 +316,13 @@ function Home () {
                                 </UserInfo>
                     
                             </UserItem>
+                            
                         ))}
                         </div>
                     ))) : 
                 (
                 sortedUsers.map((user) => (
-                <UserItem key={user.id}>
+                <UserItem key={user.id} onClick={() => navigate(`/user/${user.id}`)}>
                     <Avatar src={`https://robohash.org/${user.firstName}`} alt={user.firstName} width={50} />
                     <UserInfo>
                         <p>{user.firstName} {user.lastName}</p>

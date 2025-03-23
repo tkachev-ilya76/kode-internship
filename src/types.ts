@@ -7,6 +7,7 @@ export interface User {
     userTag: string;
     position: string;
     birthday: string;
+    phone: string;
 }
 export interface UserWithNextBirthday extends User {
     nextBirthday: Date;
