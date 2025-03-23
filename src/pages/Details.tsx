@@ -8,7 +8,7 @@ import back from '../assets/arrow_back.svg';
 import star from '../assets/star.svg';
 import call from '../assets/call.svg';
 import dep from '../assets/case.svg';
-
+import { getCachedUsers } from "../services/api";
 
 function Details(){
     const {id} = useParams();      
@@ -81,6 +81,13 @@ const PhoneLink = styled.a`
 
   useEffect(() => {
     const loadUsers = async () => {
+        const cachedUsers = getCachedUsers();
+                if (cachedUsers) {
+                    const user = cachedUsers.find((u:User) => u.id === id);
+                    setUser(user);
+                    setLoading(false);
+                    return;
+                }
         try {
             const usersData = await fetchUsers();
             const user = usersData.items.find((u:User) => u.id === id);

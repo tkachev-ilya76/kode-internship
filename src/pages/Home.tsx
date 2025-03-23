@@ -7,9 +7,10 @@ import sortIcon from '../assets/sort.svg';
 import radioOff from '../assets/radio_button_unchecked.svg';
 import radioOn from '../assets/radio_button_checked.svg';
 import close from '../assets/cancel.svg';
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
+import { useNavigate } from "react-router-dom";
+import { getCachedUsers } from "../services/api";
+import { setCachedUsers } from "../services/api";
 
 const Container = styled.div`
   width: auto;
@@ -203,10 +204,24 @@ function Home () {
 
     useEffect(() => {
         const loadUsers = async () => {
-          try {
+        const cachedUsers = getCachedUsers();
+        console.log("Данные в localStorage:", localStorage.getItem("users_cache"));
+
+        if (cachedUsers) {
+              
+            const usersWithNextBirthDay = cachedUsers.map(calculateNextBirthday);
+            setUsers(usersWithNextBirthDay);
+            setLoading(false);
+            console.log('cached');
+            return;
+        }          
+          
+        try {
             const users = await fetchUsers();
+            setCachedUsers(users.items);
             const usersWithNextBirthDay = users.items.map(calculateNextBirthday);
             setUsers(usersWithNextBirthDay);
+            
             console.log("Список пользователей:", users);
             
           } catch (error) {
